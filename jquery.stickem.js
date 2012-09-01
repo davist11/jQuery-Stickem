@@ -1,6 +1,15 @@
 /**
  * @name jQuery Stick 'em
  * @author Trevor Davis
+
+$('div[role="main"]').imagesLoaded(function() {
+	var $this = $(this);
+	
+	$this.find('.stickem').stickem({
+		offset: 75
+	});
+});
+
  */
 ;(function($, window, document, undefined) {
 	
