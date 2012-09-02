@@ -4,8 +4,8 @@
 
 $('div[role="main"]').imagesLoaded(function() {
 	var $this = $(this);
-	
-	$this.find('.stickem').stickem({
+
+	$this.stickem({
 		offset: 75
 	});
 });
@@ -17,15 +17,15 @@ $('div[role="main"]').imagesLoaded(function() {
 		this.elem = elem;
 		this.$elem = $(elem);
 		this.options = options;
-		this.metadata = this.$elem.data( "stickem-options" );
-		this.elemHeight = this.$elem.height();
+		this.metadata = this.$elem.data("stickem-options");
 		this.$win = $(window);
-		this.isStuck = false;
-		this.windowHeight = this.$win.height();
 	};
 
 	Stickem.prototype = {
 		defaults: {
+			stickClass: 'stickit',
+			endStickClass: 'stickit-end',
+			item: '.stickem',
 			container: '.stickem-container',
 			offset: 0
 		},
@@ -33,68 +33,106 @@ $('div[role="main"]').imagesLoaded(function() {
 		init: function() {
 			var _self = this;
 			
-			_self.config = $.extend( {}, _self.defaults, _self.options, _self.metadata );
+			//Merge options
+			_self.config = $.extend({}, _self.defaults, _self.options, _self.metadata);
 			
-			_self.windowHeight = _self.windowHeight - this.config.offset;
-
-
-			//REMOVE ME
-			_self.$container = _self.$elem.parents(_self.config.container);
-			_self.$elem.css('background', 'green');
-			_self.$container.css('background', 'red');
-
-
-			//Only do it if the window is tall enough
-			if(_self.windowHeight > _self.elemHeight) {
-				_self.$container = _self.$elem.parents(_self.config.container);
-				
-				_self.containerInner = {
-					border: parseInt(_self.$container.css('border-top'), 10),
-					padding: parseInt(_self.$container.css('padding-top'), 10)
-				};
-				_self.containerHeight = _self.$container.height();
-				_self.containerStart = _self.$container.offset().top - _self.config.offset + _self.containerInner.padding + _self.containerInner.border;
-				_self.scrollFinish = _self.containerStart + (_self.containerHeight - _self.elemHeight);
-				_self.difference = _self.scrollFinish - _self.containerStart + _self.containerInner.padding;
-
-				console.log('start: ' + _self.containerStart)
-				console.log('end: ' + _self.scrollFinish)
-				console.log('container height: ' + _self.containerHeight)
-				console.log('elemheight: ' + _self.elemHeight)
-				console.log('amount: ' + (_self.scrollFinish - _self.containerStart))
-
-
-				_self.$win.on('scroll', function(e) {
-					var pos = _self.$win.scrollTop();
-
-					//TODO: add check to see if the element is bigger than the parent
-					//TODO: do something once you have reached the end (position absolute, top postition)
-
-
-					console.log(pos)
-					if(_self.isStuck) {
-						//if we have reached the end, do something
-						if(pos < _self.containerStart || pos > _self.scrollFinish) {
-							_self.$elem.removeClass('stickit')
-							
-							//only at the bottom
-							if(pos > _self.scrollFinish) {
-								_self.$elem.addClass('stickit-end');
-							}
-							
-							_self.isStuck = false;
-						}
-					} else {
-						if(pos > _self.containerStart && pos < _self.scrollFinish) {
-							_self.$elem.removeClass('stickit-end').addClass('stickit');
-							_self.isStuck = true;
-						}
-					}
-				});
-				
-			}
+			_self.setWindowHeight();
+			_self.getItems();
+			_self.bindEvents();
 			
 			return _self;
+		},
+		
+		bindEvents: function() {
+			var _self = this;
+			
+			if(_self.items.length > 0) {
+				_self.$win.on('scroll', $.proxy(_self.handleScroll, _self));
+				
+				_self.$win.on('resize', $.proxy(_self.handleResize, _self));
+			}
+		},
+		
+		getItem: function(index, element) {
+			var _self = this;
+			var $this = $(element);
+			var item = {
+				$elem: $this,
+				elemHeight: $this.height(),
+				$container: $this.parents(_self.config.container),
+				isStuck: false
+			};
+			
+			//If the element is smaller than the window
+			if(_self.windowHeight > item.elemHeight) {
+				item.containerHeight = item.$container.height();
+				item.containerInner = {
+					border: {
+						bottom: parseInt(item.$container.css('border-bottom'), 10) || 0,
+						top: parseInt(item.$container.css('border-top'), 10) || 0
+					},
+					padding: {
+						bottom: parseInt(item.$container.css('padding-bottom'), 10) || 0,
+						top: parseInt(item.$container.css('padding-top'), 10) || 0
+					} 
+				};
+				
+				item.containerInnerHeight = item.containerHeight - item.containerInner.border.bottom - item.containerInner.border.top - item.containerInner.padding.bottom - item.containerInner.border.top;
+				item.containerStart = item.$container.offset().top - _self.config.offset + item.containerInner.padding.top + item.containerInner.border.top;
+				item.scrollFinish = item.containerStart + (item.containerInnerHeight - item.elemHeight);
+				
+				//If the element is smaller than the container
+				if(item.containerInnerHeight > item.elemHeight) {
+					_self.items.push(item);
+				}
+			}
+		},
+		
+		getItems: function() {
+			var _self = this;
+			
+			_self.items = [];
+			
+			_self.$elem.find(_self.config.item).each($.proxy(_self.getItem, _self));
+		},
+		
+		handleResize: function() {
+			var _self = this;
+			
+			_self.getItems();
+			_self.setWindowHeight();
+		},
+		
+		handleScroll: function() {
+			var _self = this;
+			var pos = _self.$win.scrollTop();
+
+			for(var i = 0, len = _self.items.length; i < len; i++) {
+				var item = _self.items[i];
+				
+				//If it's stuck, and we need to unstick it
+				if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) {
+					item.$elem.removeClass(_self.config.stickClass);
+
+					//only at the bottom
+					if(pos > item.scrollFinish) {
+						item.$elem.addClass(_self.config.endStickClass);
+					}
+
+					item.isStuck = false;
+				
+				//If we need to stick it
+				} else if(item.isStuck === false && pos > item.containerStart && pos < item.scrollFinish) {
+						item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
+						item.isStuck = true;
+				}
+			}
+		},
+		
+		setWindowHeight: function() {
+			var _self = this;
+			
+			_self.windowHeight = _self.$win.height() - _self.config.offset;
 		}
 	};
 
