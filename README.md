@@ -34,20 +34,20 @@ Make items sticky as you scroll, to a point. ([See Demo](http://davist11.github.
 
 ### Defaults
 
-*item: '.stickem'*
+**item: '.stickem'**<br>
 Items that you want to stick on scroll.
 
-*container: '.stickem-container'*
+**container: '.stickem-container'**<br>
 Container that you want the sticky item to be contained in.
 
-*stickClass: 'stickit'*
+**stickClass: 'stickit'**<br>
 Class added to the sticky item once it should start being sticky.
 
-*endStickClass: 'stickit-end'*
+**endStickClass: 'stickit-end'**<br>
 Class added to the sticky item once it has reached the end of the container
 
-*offset: 0*
+**offset: 0**<br>
 Do you already have a fixed horizontal header on the page? Offset stick 'em by that many pixels.
 
-*start: 0*
+**start: 0**<br>
 If your sticky item isn't at the top of the container, tell it where it should start being sticky.
