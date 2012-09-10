@@ -1,4 +1,4 @@
-Make items sticky as you scroll, to a point.
+Make items sticky as you scroll, to a point. ([See Demo](http://davist11.github.com/jQuery-Stickem/))
 
 ## Usage
 
