@@ -1,13 +1,14 @@
 /**
  * @name jQuery Stick 'em
  * @author Trevor Davis
-
-$('div[role="main"]').imagesLoaded(function() {
-	var $this = $(this);
-
-	$this.stickem({
-		offset: 75
-	});
+ *
+ *	$('.container').stickem({
+ *	 	item: '.stickem',
+ *		container: '.stickem-container',
+ *		stickClass: 'stickit',
+ *		endStickClass: 'stickit-end',
+ *		offset: 0
+ *	});
 });
 
  */
@@ -23,11 +24,12 @@ $('div[role="main"]').imagesLoaded(function() {
 
 	Stickem.prototype = {
 		defaults: {
-			stickClass: 'stickit',
-			endStickClass: 'stickit-end',
 			item: '.stickem',
 			container: '.stickem-container',
-			offset: 0
+			stickClass: 'stickit',
+			endStickClass: 'stickit-end',
+			offset: 0,
+			start: 0
 		},
 
 		init: function() {
@@ -65,7 +67,7 @@ $('div[role="main"]').imagesLoaded(function() {
 			
 			//If the element is smaller than the window
 			if(_self.windowHeight > item.elemHeight) {
-				item.containerHeight = item.$container.height();
+				item.containerHeight = item.$container.outerHeight();
 				item.containerInner = {
 					border: {
 						bottom: parseInt(item.$container.css('border-bottom'), 10) || 0,
@@ -77,9 +79,9 @@ $('div[role="main"]').imagesLoaded(function() {
 					} 
 				};
 				
-				item.containerInnerHeight = item.containerHeight - item.containerInner.border.bottom - item.containerInner.border.top - item.containerInner.padding.bottom - item.containerInner.border.top;
-				item.containerStart = item.$container.offset().top - _self.config.offset + item.containerInner.padding.top + item.containerInner.border.top;
-				item.scrollFinish = item.containerStart + (item.containerInnerHeight - item.elemHeight);
+				item.containerInnerHeight = item.$container.height();
+				item.containerStart = item.$container.offset().top - _self.config.offset + _self.config.start + item.containerInner.padding.top + item.containerInner.border.top;
+				item.scrollFinish = item.containerStart - _self.config.start + (item.containerInnerHeight - item.elemHeight);
 				
 				//If the element is smaller than the container
 				if(item.containerInnerHeight > item.elemHeight) {

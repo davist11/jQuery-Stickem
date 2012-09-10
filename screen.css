@@ -1,0 +1,61 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font: 14px/1.5 Helvetica, Arial, sans-serif;
+}
+
+.container {
+	margin: 20px auto;
+	width: 960px;
+}
+
+.row {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 40px;
+	padding-bottom: 40px;
+	position: relative;
+}
+
+.row:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+
+.content {
+	float: left;
+	width: 640px;
+}
+
+.aside {
+	background: #cecece;
+	float: right;
+	/*padding: 20px;*/
+	padding: 0 20px;
+	width: 260px;
+}
+
+h2 {
+	font-size: 20px;
+}
+
+p {
+	margin-bottom: 1.5em;
+}
+
+.stickit {
+	margin-left: 660px;
+	position: fixed;
+	top: 0;
+}
+
+.stickit-end {
+	bottom: 40px;
+	position: absolute;
+	right: 0;
+}
