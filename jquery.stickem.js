@@ -1,6 +1,7 @@
 /**
  * @name jQuery Stick 'em
  * @author Trevor Davis
+ * @version 1.1
  *
  *	$('.container').stickem({
  *	 	item: '.stickem',
@@ -9,9 +10,8 @@
  *		endStickClass: 'stickit-end',
  *		offset: 0
  *	});
-});
-
  */
+
 ;(function($, window, document, undefined) {
 	
 	var Stickem = function(elem, options) {
@@ -49,10 +49,17 @@
 			var _self = this;
 			
 			if(_self.items.length > 0) {
-				_self.$win.on('scroll', $.proxy(_self.handleScroll, _self));
+				_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
 				
-				_self.$win.on('resize', $.proxy(_self.handleResize, _self));
+				_self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
 			}
+		},
+		
+		destroy: function() {
+			var _self = this;
+			
+			_self.$win.off('scroll.stickem');
+			_self.$win.off('resize.stickem');
 		},
 		
 		getItem: function(index, element) {
@@ -141,6 +148,13 @@
 	Stickem.defaults = Stickem.prototype.defaults;
 
 	$.fn.stickem = function(options) {
+		//Create a destroy method so that you can kill it and call it again.
+		this.destroy = function() {
+			this.each(function() {
+				new Stickem(this, options).destroy();
+			});
+		};
+		
 		return this.each(function() {
 			new Stickem(this, options).init();
 		});
