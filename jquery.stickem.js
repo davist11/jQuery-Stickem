@@ -8,7 +8,9 @@
  *		container: '.stickem-container',
  *		stickClass: 'stickit',
  *		endStickClass: 'stickit-end',
- *		offset: 0
+ *		offset: 0,
+ *		start: 0,
+ *		replaceHeight: false
  *	});
  */
 
@@ -29,7 +31,8 @@
 			stickClass: 'stickit',
 			endStickClass: 'stickit-end',
 			offset: 0,
-			start: 0
+			start: 0,
+			replaceHeight: false
 		},
 
 		init: function() {
@@ -122,7 +125,10 @@
 				//If it's stuck, and we need to unstick it
 				if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) {
 					item.$elem.removeClass(_self.config.stickClass);
-
+					if(_self.config.replaceHeight) {
+						item.$container.css('margin-top', 0);
+					}
+					
 					//only at the bottom
 					if(pos > item.scrollFinish) {
 						item.$elem.addClass(_self.config.endStickClass);
@@ -132,6 +138,9 @@
 				
 				//If we need to stick it
 				} else if(item.isStuck === false && pos > item.containerStart && pos < item.scrollFinish) {
+						if(_self.config.replaceHeight) {
+							item.$container.css('margin-top', item.$elem.outerHeight( true ));
+						}
 						item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
 						item.isStuck = true;
 				}
