@@ -1,14 +1,16 @@
 /**
  * @name jQuery Stick 'em
  * @author Trevor Davis
- * @version 1.1
+ * @version 1.2
  *
  *	$('.container').stickem({
  *	 	item: '.stickem',
  *		container: '.stickem-container',
  *		stickClass: 'stickit',
  *		endStickClass: 'stickit-end',
- *		offset: 0
+ *		offset: 0,
+ *		onStick: null,
+ *		onUnstick: null
  *	});
  */
 
@@ -29,7 +31,9 @@
 			stickClass: 'stickit',
 			endStickClass: 'stickit-end',
 			offset: 0,
-			start: 0
+			start: 0,
+			onStick: null,
+			onUnstick: null
 		},
 
 		init: function() {
@@ -131,8 +135,9 @@
 					item.isStuck = false;
 
 					//if supplied fire the onUnstick callback
-					if(_self.config.onUnstick)
+					if(_self.config.onUnstick) {
 						_self.config.onUnstick(item);
+					}
 
 				//If we need to stick it
 				} else if(item.isStuck === false && pos > item.containerStart && pos < item.scrollFinish) {
@@ -140,8 +145,9 @@
 						item.isStuck = true;
 
 						//if supplied fire the onStick callback
-						if(_self.config.onStick)
+						if(_self.config.onStick) {
 							_self.config.onStick(item);
+						}
 				}
 			}
 		},

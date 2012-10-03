@@ -52,6 +52,12 @@ Do you already have a fixed horizontal header on the page? Offset stick 'em by t
 **start: 0**<br>
 If your sticky item isn't at the top of the container, tell it where it should start being sticky.
 
+**onStick: null**<br>
+You can create a callback function that fires when an item gets "stuck". The item gets passed back.
+
+**onUnstick: null**<br>
+You can create a callback function that fires when an item gets "un-stuck". The item gets passed back.
+
 ### Destroying
 
 If you have a bunch of stuff that happens after your page has loaded (e.g. AJAX requests) that changes the height of your containers and page, and you need to "destroy" stick 'em, do it like this:
