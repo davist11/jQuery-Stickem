@@ -1,7 +1,7 @@
 /**
  * @name jQuery Stick 'em
  * @author Trevor Davis
- * @version 1.2
+ * @version 1.3
  *
  *	$('.container').stickem({
  *	 	item: '.stickem',
@@ -98,6 +98,8 @@
 				if(item.containerInnerHeight > item.elemHeight) {
 					_self.items.push(item);
 				}
+			} else {
+				item.$elem.removeClass(_self.config.stickClass + ' ' + _self.config.endStickClass);
 			}
 		},
 
