@@ -52,11 +52,8 @@
 		bindEvents: function() {
 			var _self = this;
 
-			if(_self.items.length > 0) {
-				_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
-
-				_self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
-			}
+			_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
+			_self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
 		},
 
 		destroy: function() {
@@ -120,6 +117,10 @@
 
 		handleScroll: function() {
 			var _self = this;
+
+			// return early if there are no elements to stick
+			if (_self.items.length < 1) return;
+
 			var pos = _self.$win.scrollTop();
 
 			for(var i = 0, len = _self.items.length; i < len; i++) {
