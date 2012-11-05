@@ -1,7 +1,7 @@
 /**
  * @name jQuery Stick 'em
  * @author Trevor Davis
- * @version 1.3
+ * @version 1.4
  *
  *	$('.container').stickem({
  *	 	item: '.stickem',
@@ -51,12 +51,9 @@
 
 		bindEvents: function() {
 			var _self = this;
-
-			if(_self.items.length > 0) {
-				_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
-
-				_self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
-			}
+			
+			_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
+			_self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
 		},
 
 		destroy: function() {
@@ -120,36 +117,39 @@
 
 		handleScroll: function() {
 			var _self = this;
-			var pos = _self.$win.scrollTop();
 
-			for(var i = 0, len = _self.items.length; i < len; i++) {
-				var item = _self.items[i];
+			if(_self.items.length > 0) {
+				var pos = _self.$win.scrollTop();
 
-				//If it's stuck, and we need to unstick it
-				if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) {
-					item.$elem.removeClass(_self.config.stickClass);
+				for(var i = 0, len = _self.items.length; i < len; i++) {
+					var item = _self.items[i];
 
-					//only at the bottom
-					if(pos > item.scrollFinish) {
-						item.$elem.addClass(_self.config.endStickClass);
-					}
+					//If it's stuck, and we need to unstick it
+					if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) {
+						item.$elem.removeClass(_self.config.stickClass);
 
-					item.isStuck = false;
-
-					//if supplied fire the onUnstick callback
-					if(_self.config.onUnstick) {
-						_self.config.onUnstick(item);
-					}
-
-				//If we need to stick it
-				} else if(item.isStuck === false && pos > item.containerStart && pos < item.scrollFinish) {
-						item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
-						item.isStuck = true;
-
-						//if supplied fire the onStick callback
-						if(_self.config.onStick) {
-							_self.config.onStick(item);
+						//only at the bottom
+						if(pos > item.scrollFinish) {
+							item.$elem.addClass(_self.config.endStickClass);
 						}
+
+						item.isStuck = false;
+
+						//if supplied fire the onUnstick callback
+						if(_self.config.onUnstick) {
+							_self.config.onUnstick(item);
+						}
+
+					//If we need to stick it
+					} else if(item.isStuck === false && pos > item.containerStart && pos < item.scrollFinish) {
+							item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
+							item.isStuck = true;
+
+							//if supplied fire the onStick callback
+							if(_self.config.onStick) {
+								_self.config.onStick(item);
+							}
+					}
 				}
 			}
 		},
