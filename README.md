@@ -52,6 +52,9 @@ Do you already have a fixed horizontal header on the page? Offset stick 'em by t
 **start: 0**<br>
 If your sticky item isn't at the top of the container, tell it where it should start being sticky.
 
+**stickAlways: false**<br>
+Controls whether the item is sticky when its height is larger than the browser window height: false: do not stick, true: always stick the item, regardless of its size.
+
 **onStick: null**<br>
 You can create a callback function that fires when an item gets "stuck". The item gets passed back.
 
