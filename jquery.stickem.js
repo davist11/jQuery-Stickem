@@ -74,12 +74,13 @@
 				$elem: $this,
 				elemHeight: $this.height(),
 				$container: $this.parents(_self.config.container),
-				isStuck: false
+				isStuck: $this.hasClass(_self.config.stickClass)
 			};
 
 			//If the element is smaller than the window
 			if(_self.config.overflow || _self.windowHeight > item.elemHeight) {
 				item.overflowAmount = Math.max(0, item.elemHeight - _self.windowHeight);
+				if (item.overflowAmount && item.isStuck) item.isOverflowing = 1;
 				item.containerHeight = item.$container.outerHeight();
 				item.containerInner = {
 					border: {
@@ -132,15 +133,15 @@
 
 					//If it's stuck, and we need to unstick it
 					if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish + item.overflowAmount
-							|| (item.isOverflowing > 0 && pos < _self.lastPos)
-							|| (item.isOverflowing < 0 && pos > _self.lastPos)
+							|| (item.isOverflowing > 0 && pos > _self.lastPos)
+							|| (item.isOverflowing < 0 && pos < _self.lastPos)
 					)) {
 						item.isOverflowing = 0;
 						item.$elem.removeClass(_self.config.stickClass);
 						// set current position as absolute
 						if (_self.config.topProperty) {
 							item.$elem.css(_self.config.topProperty, 
-								Math.max(item.containerStart, Math.min(pos - item.overflowAmount, item.scrollFinish)) 
+								Math.max(item.containerStart, Math.min(pos + parseInt(item.$elem.css('top'),10), item.scrollFinish)) 
 									- item.$elem.offsetParent().offset().top + 'px'
 							);
 						}
@@ -163,12 +164,15 @@
 								var itemOffsetTop = item.$elem.offset().top;
 								if (_self.lastPos < pos && itemOffsetTop + item.elemHeight < pos + _self.windowHeight) {
 									item.$elem.css(_self.config.topProperty, (-item.overflowAmount) + 'px');
-									item.isOverflowing = 1;
+									item.isOverflowing = -1;
 								} else if (_self.lastPos > pos && itemOffsetTop > pos) {
 									item.$elem.css(_self.config.topProperty, '0px');
-									item.isOverflowing = -1;
+									item.isOverflowing = 1;
 								} else if (itemOffsetTop > pos + _self.windowHeight || itemOffsetTop + item.elemHeight < pos) {
 									item.$elem.css(_self.config.topProperty, '0px');
+								// } else if (item.$elem.hasClass(_self.config.stickClass)) {
+								// 	// we actually are not sticked...
+								// 	item.isOverflowing = -1;
 								} else {
 									return;
 								}
