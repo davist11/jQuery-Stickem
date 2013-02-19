@@ -43,6 +43,9 @@ Container that you want the sticky item to be contained in.
 **stickClass: 'stickit'**<br>
 Class added to the sticky item once it should start being sticky.
 
+**activeStickClass: 'stickit-active'**<br>
+Class added to the sticky item handled by the plugin (ie. not bigger than container)
+
 **endStickClass: 'stickit-end'**<br>
 Class added to the sticky item once it has reached the end of the container
 
@@ -51,6 +54,14 @@ Do you already have a fixed horizontal header on the page? Offset stick 'em by t
 
 **start: 0**<br>
 If your sticky item isn't at the top of the container, tell it where it should start being sticky.
+
+**overflow: true**<br>
+If a sticky is bigger than window, you'll be able to scroll it by scrolling the window. You can
+disable this for backwards compatibility.
+
+**topProperty: 'top'**<br>
+CSS property to use for positioning the item. You can use 'top', 'margin-top' or false to control it
+by css classes yourself. This is *required* for overflowing items.
 
 **onStick: null**<br>
 You can create a callback function that fires when an item gets "stuck". The item gets passed back.

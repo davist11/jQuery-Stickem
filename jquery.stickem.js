@@ -22,6 +22,7 @@
 		this.options = options;
 		this.metadata = this.$elem.data("stickem-options");
 		this.$win = $(window);
+		this.lastPos = 0;
 	};
 
 	Stickem.prototype = {
@@ -30,10 +31,13 @@
 			container: '.stickem-container',
 			stickClass: 'stickit',
 			endStickClass: 'stickit-end',
+			activeStickClass: 'stickit-active',
 			offset: 0,
 			start: 0,
 			onStick: null,
-			onUnstick: null
+			onUnstick: null,
+			overflow: true,
+			topProperty: 'top',
 		},
 
 		init: function() {
@@ -74,7 +78,8 @@
 			};
 
 			//If the element is smaller than the window
-			if(_self.windowHeight > item.elemHeight) {
+			if(_self.config.overflow || _self.windowHeight > item.elemHeight) {
+				item.overflowAmount = Math.max(0, item.elemHeight - _self.windowHeight);
 				item.containerHeight = item.$container.outerHeight();
 				item.containerInner = {
 					border: {
@@ -94,10 +99,11 @@
 				//If the element is smaller than the container
 				if(item.containerInnerHeight > item.elemHeight) {
 					_self.items.push(item);
+					item.$elem.addClass(_self.config.activeStickClass);
+					return;
 				}
-			} else {
-				item.$elem.removeClass(_self.config.stickClass + ' ' + _self.config.endStickClass);
 			}
+			item.$elem.removeClass(_self.config.stickClass + ' ' + _self.config.endStickClass + ' ' + _self.config.activeStickClass);
 		},
 
 		getItems: function() {
@@ -125,9 +131,19 @@
 					var item = _self.items[i];
 
 					//If it's stuck, and we need to unstick it
-					if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) {
+					if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish + item.overflowAmount
+							|| (item.isOverflowing > 0 && pos < _self.lastPos)
+							|| (item.isOverflowing < 0 && pos > _self.lastPos)
+					)) {
+						item.isOverflowing = 0;
 						item.$elem.removeClass(_self.config.stickClass);
-
+						// set current position as absolute
+						if (_self.config.topProperty) {
+							item.$elem.css(_self.config.topProperty, 
+								Math.max(item.containerStart, Math.min(pos - item.overflowAmount, item.scrollFinish)) 
+									- item.$elem.offsetParent().offset().top + 'px'
+							);
+						}
 						//only at the bottom
 						if(pos > item.scrollFinish) {
 							item.$elem.addClass(_self.config.endStickClass);
@@ -142,16 +158,35 @@
 
 					//If we need to stick it
 					} else if(item.isStuck === false && pos > item.containerStart && pos < item.scrollFinish) {
-							item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
-							item.isStuck = true;
-
-							//if supplied fire the onStick callback
-							if(_self.config.onStick) {
-								_self.config.onStick(item);
+						if (_self.config.topProperty) {
+							if (item.overflowAmount) {
+								var itemOffsetTop = item.$elem.offset().top;
+								if (_self.lastPos < pos && itemOffsetTop + item.elemHeight < pos + _self.windowHeight) {
+									item.$elem.css(_self.config.topProperty, (-item.overflowAmount) + 'px');
+									item.isOverflowing = 1;
+								} else if (_self.lastPos > pos && itemOffsetTop > pos) {
+									item.$elem.css(_self.config.topProperty, '0px');
+									item.isOverflowing = -1;
+								} else if (itemOffsetTop > pos + _self.windowHeight || itemOffsetTop + item.elemHeight < pos) {
+									item.$elem.css(_self.config.topProperty, '0px');
+								} else {
+									return;
+								}
+							} else {
+								item.$elem.css(_self.config.topProperty, '0px');
 							}
+						}
+						item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
+						item.isStuck = true;
+
+						//if supplied fire the onStick callback
+						if(_self.config.onStick) {
+							_self.config.onStick(item);
+						}
 					}
 				}
 			}
+			_self.lastPos = pos;
 		},
 
 		setWindowHeight: function() {

@@ -48,14 +48,19 @@ p {
 	margin-bottom: 1.5em;
 }
 
+.stickit-active {
+	position: absolute;
+	right: 0px;
+}
+
 .stickit {
 	margin-left: 660px;
 	position: fixed;
 	top: 0;
+	right: auto;
 }
 
 .stickit-end {
-	bottom: 40px;
 	position: absolute;
 	right: 0;
 }
