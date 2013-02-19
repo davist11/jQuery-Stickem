@@ -133,8 +133,8 @@
 
 					//If it's stuck, and we need to unstick it
 					if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish + item.overflowAmount
-							|| (item.isOverflowing > 0 && pos > _self.lastPos)
-							|| (item.isOverflowing < 0 && pos < _self.lastPos)
+							|| (item.isOverflowing > 0 && pos >= _self.lastPos)
+							|| (item.isOverflowing < 0 && pos <= _self.lastPos)
 					)) {
 						item.isOverflowing = 0;
 						item.$elem.removeClass(_self.config.stickClass);
