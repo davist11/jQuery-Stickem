@@ -31,6 +31,7 @@
 			container: '.stickem-container',
 			stickClass: 'stickit',
 			endStickClass: 'stickit-end',
+			overflowStickClass: 'stickit-overflow',
 			activeStickClass: 'stickit-active',
 			offset: 0,
 			start: 0,
@@ -104,7 +105,8 @@
 					return;
 				}
 			}
-			item.$elem.removeClass(_self.config.stickClass + ' ' + _self.config.endStickClass + ' ' + _self.config.activeStickClass);
+			item.$elem.removeClass(_self.config.stickClass + ' ' + _self.config.endStickClass 
+				+ ' ' + _self.config.activeStickClass + ' ' + _self.config.overflowStickClass);
 		},
 
 		getItems: function() {
@@ -148,6 +150,8 @@
 						//only at the bottom
 						if(pos > item.scrollFinish) {
 							item.$elem.addClass(_self.config.endStickClass);
+						} else if (pos > item.containerStart) {
+							item.$elem.addClass(_self.config.overflowStickClass);
 						}
 
 						item.isStuck = false;
@@ -180,7 +184,8 @@
 								item.$elem.css(_self.config.topProperty, '0px');
 							}
 						}
-						item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
+						item.$elem.removeClass(_self.config.endStickClass + ' ' + _self.config.overflowStickClass)
+							.addClass(_self.config.stickClass);
 						item.isStuck = true;
 
 						//if supplied fire the onStick callback
