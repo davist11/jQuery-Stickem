@@ -4,7 +4,7 @@
  * @version 1.4
  *
  *	$('.container').stickem({
- *	 	item: '.stickem',
+ *		item: '.stickem',
  *		container: '.stickem-container',
  *		stickClass: 'stickit',
  *		endStickClass: 'stickit-end',
@@ -51,7 +51,7 @@
 
 		bindEvents: function() {
 			var _self = this;
-			
+
 			_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
 			_self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
 		},
