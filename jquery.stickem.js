@@ -4,7 +4,7 @@
  * @version 1.4
  *
  *	$('.container').stickem({
- *	 	item: '.stickem',
+ *		item: '.stickem',
  *		container: '.stickem-container',
  *		stickClass: 'stickit',
  *		endStickClass: 'stickit-end',
@@ -16,12 +16,14 @@
 
 ;(function($, window, document, undefined) {
 
+	var IS_IOS = (navigator.userAgent.match(/(iPad|iPhone|iPod)/g) ? true : false);
+
 	var Stickem = function(elem, options) {
 		this.elem = elem;
 		this.$elem = $(elem);
 		this.options = options;
 		this.metadata = this.$elem.data("stickem-options");
-		this.$win = $(window);
+		this.$win = IS_IOS ? $(document) : $(window);
 	};
 
 	Stickem.prototype = {
@@ -53,14 +55,14 @@
 			var _self = this;
 			
 			_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
-			_self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
+			if (!IS_IOS) _self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
 		},
 
 		destroy: function() {
 			var _self = this;
 
 			_self.$win.off('scroll.stickem');
-			_self.$win.off('resize.stickem');
+			if (!IS_IOS) _self.$win.off('resize.stickem');
 		},
 
 		getItem: function(index, element) {
