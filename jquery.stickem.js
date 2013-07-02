@@ -53,7 +53,7 @@
 
 		bindEvents: function() {
 			var _self = this;
-			
+
 			_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
 			if (!IS_IOS) _self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
 		},
@@ -91,7 +91,7 @@
 
 				item.containerInnerHeight = item.$container.height();
 				item.containerStart = item.$container.offset().top - _self.config.offset + _self.config.start + item.containerInner.padding.top + item.containerInner.border.top;
-				item.scrollFinish = item.containerStart - _self.config.start + (item.containerInnerHeight - item.elemHeight);
+				item.scrollFinish = item.containerStart - _self.config.start - _self.config.offset + (item.containerInnerHeight - item.elemHeight);
 
 				//If the element is smaller than the container
 				if(item.containerInnerHeight > item.elemHeight) {
