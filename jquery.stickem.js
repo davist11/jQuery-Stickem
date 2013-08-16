@@ -41,7 +41,7 @@
 		init: function() {
 			var _self = this;
 
-			//Merge options
+			// merge options
 			_self.config = $.extend({}, _self.defaults, _self.options, _self.metadata);
 
 			_self.setWindowHeight();
@@ -75,7 +75,7 @@
 				isStuck: false
 			};
 
-			//If the element is smaller than the window
+			// if the element is smaller than the window
 			if(_self.windowHeight > item.elemHeight) {
 				item.containerHeight = item.$container.outerHeight();
 				item.containerInner = {
@@ -90,10 +90,18 @@
 				};
 
 				item.containerInnerHeight = item.$container.height();
-				item.containerStart = item.$container.offset().top - _self.config.offset + _self.config.start + item.containerInner.padding.top + item.containerInner.border.top;
-				item.scrollFinish = item.containerStart - _self.config.start - _self.config.offset + (item.containerInnerHeight - item.elemHeight);
+				item.containerStart = item.$container.offset().top
+									 - _self.config.offset
+									 + _self.config.start
+									 + item.containerInner.padding.top
+									 + item.containerInner.border.top;
+				item.scrollFinish = item.containerStart
+								  - _self.config.start
+								  - _self.config.offset
+								  + (item.containerInnerHeight
+								     - item.elemHeight);
 
-				//If the element is smaller than the container
+				// if the element is smaller than the container
 				if(item.containerInnerHeight > item.elemHeight) {
 					_self.items.push(item);
 				}
@@ -126,31 +134,31 @@
 				for(var i = 0, len = _self.items.length; i < len; i++) {
 					var item = _self.items[i];
 
-					//If it's stuck, and we need to unstick it
 					if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) {
+					// if it's stuck, and we need to unstick it
 						item.$elem.removeClass(_self.config.stickClass);
 
-						//only at the bottom
+						// only at the bottom
 						if(pos > item.scrollFinish) {
 							item.$elem.addClass(_self.config.endStickClass);
 						}
 
 						item.isStuck = false;
 
-						//if supplied fire the onUnstick callback
+						// if supplied fire the onUnstick callback
 						if(_self.config.onUnstick) {
 							_self.config.onUnstick(item);
 						}
 
-					//If we need to stick it
 					} else if(item.isStuck === false && pos > item.containerStart && pos < item.scrollFinish) {
 							item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
 							item.isStuck = true;
+					// if we need to stick it
 
-							//if supplied fire the onStick callback
 							if(_self.config.onStick) {
 								_self.config.onStick(item);
 							}
+						// if supplied fire the onStick callback
 					}
 				}
 			}
@@ -166,7 +174,7 @@
 	Stickem.defaults = Stickem.prototype.defaults;
 
 	$.fn.stickem = function(options) {
-		//Create a destroy method so that you can kill it and call it again.
+		// create a destroy method so that you can kill it and call it again.
 		this.destroy = function() {
 			this.each(function() {
 				new Stickem(this, options).destroy();
