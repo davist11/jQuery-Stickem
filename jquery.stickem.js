@@ -72,7 +72,8 @@
 				$elem: $this,
 				elemHeight: $this.height(),
 				$container: $this.parents(_self.config.container),
-				isStuck: false
+				isStuck: false,
+				isStuckAtBottom: false
 			};
 
 			// if the element is smaller than the window
@@ -134,12 +135,19 @@
 				for(var i = 0, len = _self.items.length; i < len; i++) {
 					var item = _self.items[i];
 
-					if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) {
 					// if it's stuck, and we need to unstick it
+					if(pos < item.containerStart || pos > item.scrollFinish) {
+						if (IS_IOS) {
+							if (item.isStuckAtBottom && pos < item.containerStart) {
+								item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
+							}
+						}
+
 						item.$elem.removeClass(_self.config.stickClass);
 
 						// only at the bottom
 						if(pos > item.scrollFinish) {
+							item.isStuckAtBottom = true;
 							item.$elem.addClass(_self.config.endStickClass);
 						}
 
@@ -150,15 +158,16 @@
 							_self.config.onUnstick(item);
 						}
 
-					} else if(item.isStuck === false && pos > item.containerStart && pos < item.scrollFinish) {
-							item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
-							item.isStuck = true;
 					// if we need to stick it
+					} else if(pos > item.containerStart &&
+						      pos < item.scrollFinish) {
+						item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
+						item.isStuck = true;
 
-							if(_self.config.onStick) {
-								_self.config.onStick(item);
-							}
 						// if supplied fire the onStick callback
+						if(_self.config.onStick) {
+							_self.config.onStick(item);
+						}
 					}
 				}
 			}
