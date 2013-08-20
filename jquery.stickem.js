@@ -42,6 +42,10 @@
 			//Merge options
 			_self.config = $.extend({}, _self.defaults, _self.options, _self.metadata);
 
+			// If scroll area isn't window, let's set it here
+			if ( _self.config.scrollContainer )
+				_self.$win = $(_self.config.scrollContainer);
+
 			_self.setWindowHeight();
 			_self.getItems();
 			_self.bindEvents();
@@ -51,7 +55,7 @@
 
 		bindEvents: function() {
 			var _self = this;
-			
+
 			_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
 			_self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
 		},
