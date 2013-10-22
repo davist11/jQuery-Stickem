@@ -124,8 +124,8 @@
 				for(var i = 0, len = _self.items.length; i < len; i++) {
 					var item = _self.items[i];
 
-					//If it's stuck, and we need to unstick it
-					if(item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) {
+					//If it's stuck, and we need to unstick it, or if the page loads below it
+					if((item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) || pos > item.scrollFinish ) {
 						item.$elem.removeClass(_self.config.stickClass);
 
 						//only at the bottom
