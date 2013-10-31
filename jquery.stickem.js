@@ -1,10 +1,10 @@
 /**
  * @name jQuery Stick 'em
  * @author Trevor Davis
- * @version 1.4
+ * @version 1.4.1
  *
  *	$('.container').stickem({
- *	 	item: '.stickem',
+ *		item: '.stickem',
  *		container: '.stickem-container',
  *		stickClass: 'stickit',
  *		endStickClass: 'stickit-end',
@@ -51,7 +51,7 @@
 
 		bindEvents: function() {
 			var _self = this;
-			
+
 			_self.$win.on('scroll.stickem', $.proxy(_self.handleScroll, _self));
 			_self.$win.on('resize.stickem', $.proxy(_self.handleResize, _self));
 		},
@@ -125,7 +125,7 @@
 					var item = _self.items[i];
 
 					//If it's stuck, and we need to unstick it, or if the page loads below it
-					if((item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) || pos > item.scrollFinish ) {
+					if((item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) || pos > item.scrollFinish) {
 						item.$elem.removeClass(_self.config.stickClass);
 
 						//only at the bottom
