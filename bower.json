@@ -1,0 +1,27 @@
+{
+  "name": "stickem",
+  "version": "1.4.1",
+  "main": "./jquery.stickem.js",
+  "dependencies": {
+    "jquery": "~1.8.1"
+  },
+  "homepage": "http://davist11.github.com/jQuery-Stickem/",
+  "authors": [
+    "Trevor Davis"
+  ],
+  "keywords": [
+    "stickem"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "jquery.js",
+    "index.html",
+    "screen.css",
+    "component.json"
+  ]
+}
