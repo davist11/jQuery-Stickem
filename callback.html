@@ -61,7 +61,11 @@
 	<script src="jquery.stickem.js"></script>
 	<script>
 		$(document).ready(function() {
-			$('.container').stickem();
+			$('.container').stickem({
+				onStick: function() {
+					alert('stuck!')
+				}
+			});
 		});
 	</script>
 </body>
