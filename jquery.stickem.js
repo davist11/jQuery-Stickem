@@ -4,6 +4,7 @@
  * @version 1.4.1
  *
  *	$('.container').stickem({
+ *	    axis: 'y',
  *		item: '.stickem',
  *		container: '.stickem-container',
  *		stickClass: 'stickit',
@@ -26,6 +27,7 @@
 
 	Stickem.prototype = {
 		defaults: {
+			axis: 'y',
 			item: '.stickem',
 			container: '.stickem-container',
 			stickClass: 'stickit',
@@ -42,7 +44,7 @@
 			//Merge options
 			_self.config = $.extend({}, _self.defaults, _self.options, _self.metadata);
 
-			_self.setWindowHeight();
+			_self.setWindowSize();
 			_self.getItems();
 			_self.bindEvents();
 
@@ -68,31 +70,57 @@
 			var $this = $(element);
 			var item = {
 				$elem: $this,
-				elemHeight: $this.height(),
+				elemSize: {
+					y:$this.height(),
+					x:$this.width()
+				},
 				$container: $this.parents(_self.config.container),
 				isStuck: false
 			};
 
-			//If the element is smaller than the window
-			if(_self.windowHeight > item.elemHeight) {
-				item.containerHeight = item.$container.outerHeight();
-				item.containerInner = {
-					border: {
-						bottom: parseInt(item.$container.css('border-bottom'), 10) || 0,
-						top: parseInt(item.$container.css('border-top'), 10) || 0
-					},
-					padding: {
-						bottom: parseInt(item.$container.css('padding-bottom'), 10) || 0,
-						top: parseInt(item.$container.css('padding-top'), 10) || 0
-					}
-				};
+			// If the element is smaller than the window, we proceed with the fixing
+			
 
-				item.containerInnerHeight = item.$container.height();
-				item.containerStart = item.$container.offset().top - _self.config.offset + _self.config.start + item.containerInner.padding.top + item.containerInner.border.top;
-				item.scrollFinish = item.containerStart - _self.config.start + (item.containerInnerHeight - item.elemHeight);
+			if(_self.windowSize[_self.config.axis] > item.elemSize[_self.config.axis]) {
+				item.containerHeight = item.$container.outerHeight();
+
+				// axis scrolled
+				if(_self.config.axis == 'y'){
+					item.containerInner = {
+						border: {
+							bottom: parseInt(item.$container.css('border-bottom'), 10) || 0,
+							top: parseInt(item.$container.css('border-top'), 10) || 0
+						},
+						padding: {
+							bottom: parseInt(item.$container.css('padding-bottom'), 10) || 0,
+							top: parseInt(item.$container.css('padding-top'), 10) || 0
+						}
+					};
+
+					item.containerInnerSize = item.$container.height();
+					item.containerStart = item.$container.offset().top - _self.config.offset + _self.config.start + item.containerInner.padding.top + item.containerInner.border.top;
+					item.scrollFinish = item.containerStart - _self.config.start + (item.containerInnerSize - item.elemSize[_self.config.axis]);
+				}else{
+					item.containerInner = {
+						border: {
+							right: parseInt(item.$container.css('border-right'), 10) || 0,
+							left: parseInt(item.$container.css('border-left'), 10) || 0
+						},
+						padding: {
+							right: parseInt(item.$container.css('padding-right'), 10) || 0,
+							left: parseInt(item.$container.css('padding-left'), 10) || 0
+						}
+					};
+
+					item.containerInnerSize = item.$container.width();
+					console.log(item.$container.offset().left);
+					item.containerStart = item.$container.offset().left - _self.config.offset + _self.config.start + item.containerInner.padding.left + item.containerInner.border.left;
+					item.scrollFinish = item.containerStart - _self.config.start + (item.containerInnerSize - item.elemSize[_self.config.axis]);
+					console.log(item.scrollFinish);
+				}
 
 				//If the element is smaller than the container
-				if(item.containerInnerHeight > item.elemHeight) {
+				if(item.containerInnerSize > item.elemSize[_self.config.axis]) {
 					_self.items.push(item);
 				}
 			} else {
@@ -112,14 +140,14 @@
 			var _self = this;
 
 			_self.getItems();
-			_self.setWindowHeight();
+			_self.setWindowSize();
 		},
 
 		handleScroll: function() {
 			var _self = this;
 
 			if(_self.items.length > 0) {
-				var pos = _self.$win.scrollTop();
+				var pos = _self.config.axis == 'y'?_self.$win.scrollTop():_self.$win.scrollLeft();
 
 				for(var i = 0, len = _self.items.length; i < len; i++) {
 					var item = _self.items[i];
@@ -154,10 +182,16 @@
 			}
 		},
 
-		setWindowHeight: function() {
+		setWindowSize: function() {
 			var _self = this;
 
-			_self.windowHeight = _self.$win.height() - _self.config.offset;
+			_self.windowSize = {
+				y:_self.$win.height() - _self.config.offset,
+				x:_self.$win.width() - _self.config.offset
+			}
+
+			// _self.windowHeight = _self.$win.height() - _self.config.offset;
+			// _self.windowWidth = _self.$win.height() - _self.config.offset;
 		}
 	};
 

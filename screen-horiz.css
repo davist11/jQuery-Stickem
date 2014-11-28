@@ -1,0 +1,73 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font: 14px/1.5 Helvetica, Arial, sans-serif;
+	height: 100%;
+}
+
+.container {
+	/*margin: 20px auto;*/
+	/*width: 960px;*/
+	height: 100%;
+	width: 300%;
+}
+
+.row {
+	border-bottom: 1px solid #ccc;
+	margin-bottom: 40px;
+	padding-bottom: 40px;
+	position: relative;
+	width: 27.33%;
+	height: 100%;
+	float: left;
+	padding: 0 1%;
+}
+
+.row:after {
+	clear: both;
+	content: ".";
+	display: block;
+	height: 0;
+	visibility: hidden;
+}
+
+.content {
+	margin-top: 20px;
+	float: left;
+	width: 640px;
+}
+
+.stickem{
+	background: #cecece;
+	padding: 20px;
+}
+
+.aside {
+	width: 450px;
+	height: 175px;
+}
+
+h2 {
+	font-size: 20px;
+}
+
+p {
+	margin-bottom: 1.5em;
+}
+
+.stickit {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 410px;
+}
+
+.stickit-end {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 410px;
+}
