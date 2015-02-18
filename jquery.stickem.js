@@ -89,7 +89,7 @@
 
 				item.containerInnerHeight = item.$container.height();
 				item.containerStart = item.$container.offset().top - _self.config.offset + _self.config.start + item.containerInner.padding.top + item.containerInner.border.top;
-				item.scrollFinish = item.containerStart - _self.config.start + (item.containerInnerHeight - item.elemHeight);
+				item.scrollFinish = item.containerStart - _self.config.start - _self.config.offset + (item.containerInnerHeight - item.elemHeight);
 
 				//If the element is smaller than the container
 				if(item.containerInnerHeight > item.elemHeight) {
