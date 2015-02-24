@@ -70,7 +70,8 @@
 				$elem: $this,
 				elemHeight: $this.height(),
 				$container: $this.parents(_self.config.container),
-				isStuck: false
+				isStuck: false,
+				isStuckAtEnd: false
 			};
 
 			//If the element is smaller than the window
@@ -125,12 +126,18 @@
 					var item = _self.items[i];
 
 					//If it's stuck, and we need to unstick it, or if the page loads below it
-					if((item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) || pos > item.scrollFinish) {
+					if(((item.isStuck || item.isStuckAtEnd) && (pos < item.containerStart || pos > item.scrollFinish)) || pos > item.scrollFinish) {
 						item.$elem.removeClass(_self.config.stickClass);
 
 						//only at the bottom
 						if(pos > item.scrollFinish) {
 							item.$elem.addClass(_self.config.endStickClass);
+							item.isStuckAtEnd = true;
+						}
+
+						if(pos < item.containerStart) {
+							item.$elem.removeClass(_self.config.endStickClass);
+							item.isStuckAtEnd = false;
 						}
 
 						item.isStuck = false;
@@ -144,6 +151,7 @@
 					} else if(item.isStuck === false && pos > item.containerStart && pos < item.scrollFinish) {
 							item.$elem.removeClass(_self.config.endStickClass).addClass(_self.config.stickClass);
 							item.isStuck = true;
+							item.isStuckAtEnd = false;
 
 							//if supplied fire the onStick callback
 							if(_self.config.onStick) {
