@@ -7,7 +7,7 @@ Make items sticky as you scroll, to a point. ([See Demo](http://davist11.github.
 		&lt;div class="content">
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		&lt;/div>
-		
+
 		&lt;div class="aside stickem">
 		  I'm gonna be sticky!
 		&lt;/div>
@@ -51,6 +51,9 @@ Do you already have a fixed horizontal header on the page? Offset stick 'em by t
 
 **start: 0**<br>
 If your sticky item isn't at the top of the container, tell it where it should start being sticky.
+
+**end: 0**<br>
+If your sticky item shouldn't stick exactly at the end of the container, tell it where it should end being sticky.
 
 **onStick: null**<br>
 You can create a callback function that fires when an item gets "stuck". The item gets passed back.
