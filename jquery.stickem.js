@@ -123,7 +123,12 @@
 
 				for(var i = 0, len = _self.items.length; i < len; i++) {
 					var item = _self.items[i];
-
+					
+					// Support for containers of varying heights, when content changes via ajax for example. See https://github.com/davist11/jQuery-Stickem/issues/20
+					if(item.$container.height()!=item.containerInnerHeight) {
+						item.scrollFinish = item.containerStart - _self.config.start + (item.$container.height() - item.elemHeight);
+					}
+					
 					//If it's stuck, and we need to unstick it, or if the page loads below it
 					if((item.isStuck && (pos < item.containerStart || pos > item.scrollFinish)) || pos > item.scrollFinish) {
 						item.$elem.removeClass(_self.config.stickClass);
